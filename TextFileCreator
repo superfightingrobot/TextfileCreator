@@ -1,0 +1,67 @@
+import os
+import tkinter as tk
+from tkinter import filedialog, messagebox
+
+def write_multiple_files(directory, files_data):
+    # Check if the directory exists, if not, create it
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    # Loop through the dictionary of files_data and create each file
+    for filename, content in files_data.items():
+        file_path = os.path.join(directory, filename)
+        with open(file_path, 'w') as file:
+            file.write(content)
+    
+    # Show a success message once files are written
+    messagebox.showinfo("Success", f"Files have been written to '{directory}'.")
+
+def browse_directory():
+    # Open a file dialog to select a directory
+    directory = filedialog.askdirectory()
+    if directory:
+        # Update the entry widget with the selected directory path
+        dir_entry.delete(0, tk.END)
+        dir_entry.insert(0, directory)
+
+def run():
+    # Get the directory from the entry widget
+    directory = dir_entry.get()
+
+    if not directory:
+        messagebox.showerror("Error", "Please select or enter a directory.")
+        return
+    
+    # Define the files to be written
+    files_data = {
+        "test_file1.txt": "We are legion.",
+        "test_file2.txt": "We are legion.",
+        "test_file3.txt": "We are legion."
+    }
+    
+    # Call the function to write files
+    write_multiple_files(directory, files_data)
+
+# Create a simple GUI window
+root = tk.Tk()
+root.title("File Writer")
+root.geometry("400x200")
+
+# Label for the directory input
+dir_label = tk.Label(root, text="Directory:")
+dir_label.pack(pady=5)
+
+# Entry widget to input or display the directory
+dir_entry = tk.Entry(root, width=50)
+dir_entry.pack(pady=5)
+
+# Button to browse and select a directory
+browse_button = tk.Button(root, text="Browse", command=browse_directory)
+browse_button.pack(pady=5)
+
+# Add a button with a Unicode emoji as a visual touch to write files
+write_button = tk.Button(root, text="📝 Write Files", command=run)
+write_button.pack(pady=20)
+
+# Run the Tkinter event loop
+root.mainloop()
